@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { Public } from '../auth/decorators/public.decorator';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateRegisterDto } from './dto/create-register.dto';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 
@@ -18,8 +18,8 @@ export class UsersController {
 
   @Public()
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.usersService.create(createUserDto);
+  create(@Body() createRegisterDto: CreateRegisterDto): Promise<User> {
+    return this.usersService.create(createRegisterDto);
   }
 
   @Public()

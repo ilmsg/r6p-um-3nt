@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
+
+import { Profile } from '../profile/profile.entity';
 import { User } from './user.entity';
+
+import { CreateRegisterDto } from './dto/create-register.dto';
 
 @Injectable()
 export class UsersService {
@@ -23,21 +26,28 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    @InjectRepository(Profile)
+    private readonly profilesRepository: Repository<Profile>,
   ) { }
 
-  create(createUserDto: CreateUserDto): Promise<User> {
-    const user = new User();
-    user.username = createUserDto.username;
-    user.password = createUserDto.password;
+  async create(createRegisterDto: CreateRegisterDto): Promise<User> {
+    const profile = new Profile();
+    profile.firstname = createRegisterDto.username;
+    profile.lastname = createRegisterDto.password;
+    profile.gender = createRegisterDto.gender;
+    profile.photo = createRegisterDto.photo;
+    await this.profilesRepository.save(profile);
 
-    user.firstname = createUserDto.firstname;
-    user.lastname = createUserDto.lastname;
+    const user = new User();
+    user.username = createRegisterDto.username;
+    user.password = createRegisterDto.password;
+    user.profile = profile;
 
     return this.usersRepository.save(user);
   }
 
   async findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+    return this.usersRepository.find({ relations: ['profile'], loadRelationIds: false });
   }
 
   findOne(id: number): Promise<User> {
@@ -49,7 +59,6 @@ export class UsersService {
   }
 
   async findByUsername(username: string): Promise<User | undefined> {
-    // return this.users.find(user => user.username === username);
     return this.usersRepository.findOneBy({ username: username })
   }
 }

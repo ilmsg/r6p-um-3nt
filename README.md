@@ -1,5 +1,9 @@
 # r6p-um-3nt
 
+diagram:
+
+![diagram](https://github.com/ilmsg/r6p-um-3nt/blob/main/images/2024-03-12_150443.png?raw=true)
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
